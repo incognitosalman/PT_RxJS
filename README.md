@@ -143,13 +143,13 @@ We will depdency inject the `BlogService` in the AppComponent and call the `getB
 > An operator is a pure function which takes in observable as input and the output is also an observable.
 
 #### Pipe
-It’s a standalone function and a method on the Observable interface that can be used to combine multiple RxJS operators to compose asynchronous operations.
+> It’s a standalone function and a method on the Observable interface that can be used to combine multiple RxJS operators to compose asynchronous operations.
 
 #### Map
-Applies a given function to each value emitted by the source Observable, and emits the resulting values as an Observable.
+> Applies a given function to each value emitted by the source Observable, and emits the resulting values as an Observable.
 
 #### Filter
-Filter items emitted by the source Observable by only emitting those that satisfy a specified condition.
+> Filter items emitted by the source Observable by only emitting those that satisfy a specified condition.
 
 ```typescript
   blogs: Blog[] = [];
