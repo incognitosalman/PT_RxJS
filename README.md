@@ -150,8 +150,10 @@ We will depdency inject the `BlogService` in the AppComponent and call the `getB
 > Filter items emitted by the source Observable by only emitting those that satisfy a specified condition.
 
 ```typescript
+  // declare and initialize an empty type safe array
   blogs: Blog[] = [];
 
+  // dependency injecting for the BlogService
   constructor(private blogService: BlogService) {
   }
 
