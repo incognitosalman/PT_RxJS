@@ -39,37 +39,18 @@ var subscription = Rx.Observable.create(function (obs) {
   .subscribe(observer);  
 ```
 ## Lets implement it in our Angular Project
-we are going to call an existing api using [JSON placehoder](https://jsonplaceholder.typicode.com/) which will return data about Blogs as an observable. Then we will manipulate that data using RxJS operators. Here we will show the final result using subscription.
+we are going to call an existing api using [JSON placehoder](https://jsonplaceholder.typicode.com/) which will return data about Blogs as an observable. 
 
-### Step 1: Scaffold a new angular application
-In order to scaffold an angular application from scratch we have another lab which is pre-requisite for this lab. Here you can access the complete [details](PatternsTechGit/PT_RxJS).
+We will manipulate that data using RxJS operators. Here we will show the final result using subscription.
 
-### Step 2: Inject HttpClient in angular
- Angular provides a client HTTP API for Angular applications, the **HttpClient** service class in **@angular/common/http**. So we need to import this into our app.module.ts file.
-```typescript
-import { HttpClientModule } from '@angular/common/http';
-```
+### Step 1: Scaffolding a new angular application
+To scaffold a new angular application. See:
 
-Moreover, in order to make it available to our **AppModule** we need to import it into list of dependencies.
+### Step 2: Incorporating Http Client to Communicate with API
+To use HttpClient service in angular. See:
 
-```typescript
-
-@NgModule({
-  imports: [
-    BrowserModule,
-    // import HttpClientModule after BrowserModule.
-    HttpClientModule,
-  ],
-  declarations: [
-    AppComponent,
-  ],
-  bootstrap: [ AppComponent ]
-})
-
-```
-
-### Step 3: Using environment file
-Now we need to access the [API](https://jsonplaceholder.typicode.com/posts) in our project. So, we will be saving the base url of the API **https://jsonplaceholder.typicode.com/** into environment file (environment.ts and environment.prod.ts).
+### Step 3: Setting up API's Base Url as Environment Variable
+To setup Base Url as environment variable in development environment we will simple put it in environment.ts file. 
 
 ```typescript
 
@@ -79,13 +60,16 @@ export const environment = {
 };
 
 ```
+To understand more about environment configuration. See 9configuring application environment](https://angular.io/guide/build)
 
 ### Step 4: Creating a type safe model
-Since we are using typescript in angular project. In order to achieve the type safety in our call to API, fetching and storing data into objects we are creating a type safe model in models folder. 
+API has a function `/posts` that returns a array of object that looks like.
 
-- Create new folder **models** in app folder 
-- Create a new file **post.ts** in there.
-- Write the following code in this file
+![image](https://user-images.githubusercontent.com/100778209/157579376-36ad32e3-d21a-4b4e-85bb-d4b191cdefdd.png)
+
+To capture this array in type safe manner we will introduce a TypeScript interface matching the same property names as of returned objects.
+
+We will create a folde called `models` to contain all of our models. In it we will create a file called `posts.ts`
 
 ```typescript
 
