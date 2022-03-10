@@ -82,17 +82,14 @@ export interface Blog {
 
 ```
 
-### Step 5: Creating a new service
-We will be creating a service **BlogService** to fetch data from the [API](https://jsonplaceholder.typicode.com/posts).
+### Step 5: Creating a service to fetch data from API
+To fetch data from api we will create an angular service Blog Service. We will create a folder called `services` to contain all the services in the application. In this folder we will run the command.
 
-- Create a new folder **services** in the app folder
-- Execute the command for creation of new service **BlogService** with in the **services** folder
-
-```
+```typescript
 ng generate service blog
 ```
 
-- It will generate the file blog.service.ts with following code 
+This will scaffold a new service in our application in the file blog.service.ts with following code 
 
 ```typescript
 
@@ -109,39 +106,40 @@ export class BlogService {
 
 ```
 
-### Step 6: Injecting service as dependency and fetch data from API
-Now we will use the HttpClient in our service to get data from the API. 
-- Inject the HttpClient in BlogService
-```typescript
-constructor(private httpClient: HttpClient) { }
-```
--  Declare and initialize the **baseUrl** from environment
-```typescript
-baseUrl = environment.baseUrl;
-```
--  Create a method **getBlogPosts**
-```typescript
-getBlogPosts(): Observable<Blog[]> {
-    return this.httpClient.get<Blog[]>(this.baseUrl + 'posts');
-  }
-```
+### Step 6: Using Http Client to call the API
+We will dependency inject HttpClient in BlogService to call the api in a function called getBlogPosts. This function will use base url from the environment to construct function url and will use Blog interface to deserialize and return objects into type safe array.
 
-### Step 7: Using service in angular component
-In AppComonent we will inject **Blog Service** and on its **ngOnInit** we will call **getBlogPosts** and we will manupulate return observable using RxJS operators.
-
-- Implement the OnInit life cycle hook
 ```typescript
-export class AppComponent implements OnInit{	
-  ngOnInit(): void {
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class BlogService {
+
+  // depdendency injecting HttpClient
+  constructor(private httpClient: HttpClient) { }
+
+  // returning type safe Blog array
+  getBlogPosts(): Observable<Blog[]> {
+    // calling HttpClient get method to call the API
+    // contructing the URL using the environment variable and path to the function (i.e., posts)
+    return this.httpClient.get<Blog[]>(environment.baseUrl + 'posts');
   }
 }
-```
-- Inject the **Blog Service**
-```typescript
-constructor(private blogService: BlogService) {
-  }
+
+
 ```
 
+### Step 7: Using Blog Service in the component
+We will depdency inject the `BlogService` in the AppComponent and call the `getBlogPosts` method in `OnInit` life cycle hook to get the observable.
+
+```typescript
+ this.blogService
+      .getBlogPosts()
+      .subscribe(response => { this.blogs = response; });
+```
+### Step 8: Using RxJS Operators to manipulate data
 > An operator is a pure function which takes in observable as input and the output is also an observable.
 
 #### Pipe
@@ -153,33 +151,21 @@ Applies a given function to each value emitted by the source Observable, and emi
 #### Filter
 Filter items emitted by the source Observable by only emitting those that satisfy a specified condition.
 
-### Step 6: Filter output of map (filter top 10)
-- Declare and initialize an empty **Blog** array
 ```typescript
-blogs: Blog[] = [];
-```
-- Create the method getTop10BlogPosts
-```typescript
-getTop10Blogs(): void {
-    this.blogService
-      .getBlogPosts()
-      .subscribe(response => { this.blogs = response; });
+  blogs: Blog[] = [];
+
+  constructor(private blogService: BlogService) {
   }
-```
 
-
-### Step 7: Show result in completed function of the Observer
-- import RxJS operators
-```typescript
-import { map } from 'rxjs/operators';
-```
-- Apply the operators
-```typescript
-getTop10Blogs(): void {
-    this.blogService
-      .getBlogPosts()
+  ngOnInit(): void {
+    // calling the service
+    this.blogService.getBlogPosts()
+      // filtering the top 10 posts based on criteria using lambda expression
       .pipe(map(p => p.filter(x => x.id < 10)))
-      .subscribe(response => { this.blogs = response; });
+      .subscribe(response => {
+        this.blogs = response;
+      });
   }
 ```
+
 
