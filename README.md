@@ -8,36 +8,35 @@ Reactive programming is just a different way of building software applications. 
 ## Basic Concepts of RxJS
 > An [Observable](https://rxjs.dev/guide/observable) is basically a function that can return a stream of data to an observer over time.
 
-> Observer is there to execute some code whenever it receives a new value from the observable. We connect observable to the observer through subscription using a method called subscribe.
+> [Observer](https://rxjs.dev/guide/observer) is there to execute some code whenever it receives a new value from the observable. We connect observable to the observer through subscription using a method called subscribe.
 
 > So, observer can implement (in subscribe method) upto three methods next, error, and complete.
 
-- next() will be called by the observable whenever it emmits a new value.
-- error() will be called whenver observable throws an error. 
-- complete() is called whenver the observabe is done.
-![Observable](https://user-images.githubusercontent.com/100778209/156986684-c299d262-05d9-4dc8-b737-45d828236b99.png)
+- `next()` will be called by the observable whenever it emmits a new value.
+- `error()` will be called whenver observable throws an error. 
+- `complete()` is called whenver the observabe is done.
+![Observable](https://user-images.githubusercontent.com/100778209/157576466-819f0b12-8bac-401d-a0e1-c43485eb2f96.png)
 
-```
+```typescript
 
 var observer = {
-	next: function(value) {
-  	console.log(value);
+  next: function (value) {
+    console.log(value);
   },
-  error: function(error) {
-  	console.log(error);
+  error: function (error) {
+    console.log(error);
   },
-  complete: function() {
-  	console.log('Completed');
+  complete: function () {
+    console.log('Completed');
   }
 };
 
-var subscription = Rx.Observable.create(function(obs) {
-	  obs.next('A value');
+var subscription = Rx.Observable.create(function (obs) {
+  obs.next('A value');
   //obs.error('Error');
-   obs.complete();
+  obs.complete();
 })
-	.subscribe(observer);
-  
+  .subscribe(observer);  
 ```
 ## Lets implement it in our Angular Project
 we are going to call an existing api using [JSON placehoder](https://jsonplaceholder.typicode.com/) which will return data about Blogs as an observable. Then we will manipulate that data using RxJS operators. Here we will show the final result using subscription.
@@ -47,11 +46,13 @@ In order to scaffold an angular application from scratch we have another lab whi
 
 ### Step 2: Inject HttpClient in angular
  Angular provides a client HTTP API for Angular applications, the **HttpClient** service class in **@angular/common/http**. So we need to import this into our app.module.ts file.
-`import { HttpClientModule } from '@angular/common/http';`
+```typescript
+import { HttpClientModule } from '@angular/common/http';
+```
 
 Moreover, in order to make it available to our **AppModule** we need to import it into list of dependencies.
 
-```
+```typescript
 
 @NgModule({
   imports: [
@@ -70,7 +71,7 @@ Moreover, in order to make it available to our **AppModule** we need to import i
 ### Step 3: Using environment file
 Now we need to access the [API](https://jsonplaceholder.typicode.com/posts) in our project. So, we will be saving the base url of the API **https://jsonplaceholder.typicode.com/** into environment file (environment.ts and environment.prod.ts).
 
-```
+```typescript
 
 export const environment = {
   production: false,
@@ -86,7 +87,7 @@ Since we are using typescript in angular project. In order to achieve the type s
 - Create a new file **post.ts** in there.
 - Write the following code in this file
 
-```
+```typescript
 
 export interface Blog {
   userId: number;
@@ -109,7 +110,7 @@ ng generate service blog
 
 - It will generate the file blog.service.ts with following code 
 
-```
+```typescript
 
 import { Injectable } from '@angular/core';
 
@@ -127,15 +128,15 @@ export class BlogService {
 ### Step 6: Injecting service as dependency and fetch data from API
 Now we will use the HttpClient in our service to get data from the API. 
 - Inject the HttpClient in BlogService
-```
+```typescript
 constructor(private httpClient: HttpClient) { }
 ```
 -  Declare and initialize the **baseUrl** from environment
-```
+```typescript
 baseUrl = environment.baseUrl;
 ```
 -  Create a method **getBlogPosts**
-```
+```typescript
 getBlogPosts(): Observable<Blog[]> {
     return this.httpClient.get<Blog[]>(this.baseUrl + 'posts');
   }
@@ -145,14 +146,14 @@ getBlogPosts(): Observable<Blog[]> {
 In AppComonent we will inject **Blog Service** and on its **ngOnInit** we will call **getBlogPosts** and we will manupulate return observable using RxJS operators.
 
 - Implement the OnInit life cycle hook
-```
+```typescript
 export class AppComponent implements OnInit{	
   ngOnInit(): void {
   }
 }
 ```
 - Inject the **Blog Service**
-```
+```typescript
 constructor(private blogService: BlogService) {
   }
 ```
@@ -170,11 +171,11 @@ Filter items emitted by the source Observable by only emitting those that satisf
 
 ### Step 6: Filter output of map (filter top 10)
 - Declare and initialize an empty **Blog** array
-```
+```typescript
 blogs: Blog[] = [];
 ```
 - Create the method getTop10BlogPosts
-```
+```typescript
 getTop10Blogs(): void {
     this.blogService
       .getBlogPosts()
@@ -185,11 +186,11 @@ getTop10Blogs(): void {
 
 ### Step 7: Show result in completed function of the Observer
 - import RxJS operators
-```
+```typescript
 import { map } from 'rxjs/operators';
 ```
 - Apply the operators
-```
+```typescript
 getTop10Blogs(): void {
     this.blogService
       .getBlogPosts()
