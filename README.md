@@ -1,6 +1,4 @@
-# PT_RXJS
-
-# Calling an API & Manipulating Its Data using RxJS Operators
+# PT_RXJS - Calling an API & Manipulating Its Data using RxJS Operators
 > [RxJS](https://rxjs.dev/guide/overview) is a javascript library that brings the concept of "reactive programming" to the web.
 
 Reactive programming is just a different way of building software applications. Essentially, your software is built to "react" to changes that happen (like click events, data being fetched, etc.)
